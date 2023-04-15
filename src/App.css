@@ -1,0 +1,165 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+:root {
+  --shade0: #5a8dc3;
+  --shade1: #b3d0ef;
+  --shade2: #82addb;
+  --shade3: #3b71a8;
+  --shade4: #225c98;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.loading {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading p {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: bold;
+}
+ 
+.inner-app {
+  display: flex;
+  padding: 25px;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  background:linear-gradient(var(--shade0),var(--shade1),var(--shade3));
+  background-color: var(--shade0);
+}
+
+.app-header {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.elem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.elem label {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--shade4);
+}
+
+.web_input {
+  width: 100%;
+  padding: 8px 16px;
+  outline: none;
+  border: none;
+  background-color: white;
+  font-size: 16px;
+  line-height: 18px;
+  border: 1px solid gray;
+  transition: 200ms;
+  border-radius: 5px;
+}
+
+.web_input::placeholder {
+  color: #00000088;
+}
+
+.web_input:focus {
+  border: 1px solid var(--shade2);
+}
+button {
+  padding: 8px 16px;
+  width: fit-content;
+  font-size: 16px;
+  line-height: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background-color: var(--shade4);
+  color: white;
+  border-radius: 5px;
+}
+button:active {
+  transform: translateY(1px);
+}
+.body {
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.avail{
+  
+  font-size: 18px;
+color: #000000e0;
+}
+.card {
+  padding: 10px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #00000058;
+}
+
+.card:last-child {
+  border-bottom: none;
+}
+
+.card .url {
+  flex: 1;
+  font-size: 16px;
+  line-height: 18px;
+  font-weight: 500;
+}
+
+.card .right,
+.card .left {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.card .link {
+  cursor: pointer;
+  color: #6f17ea;
+  font-weight: 600;
+  line-height: 18px;
+  font-size: 14px;
+}
+
+.card .green {
+  color: #48d10e !important;
+}
+
+.card .red {
+  color: #f14c1f !important;
+}

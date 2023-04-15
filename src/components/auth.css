@@ -1,0 +1,102 @@
+.container {
+  background-color: var(--shade2);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.box {
+  width: 400px;
+  max-width: 100%;
+  padding: 25px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+  border-radius: 10px;
+  -webkit-box-shadow: 8px 8px 5px 0px var(--shade4);
+  -moz-box-shadow: 8px 8px 5px 0px var(--shade4);
+  box-shadow: 8px 8px 5px 0px var(--shade4);
+}
+
+.heading {
+  text-transform: uppercase;
+  color: var(--shade4);
+  font-size: 25px;
+  font-weight: bold;
+  line-height: 32px;
+ letter-spacing: 5px; 
+}
+
+.elem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.elem label {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--shade4);
+}
+
+.input {
+  width: 100%;
+  padding: 8px 16px;
+  outline: none;
+  border: none;
+  background-color: white;
+  font-size: 16px;
+  line-height: 18px;
+  border: 1px solid gray;
+  transition: 200ms;
+  border-radius: 5px;
+}
+
+.input::placeholder {
+  color: #00000088;
+}
+
+.input:focus {
+  border: 1px solid var(--shade2);
+}
+
+
+.bottomText {
+  text-align: center;
+  font-size: 15px;
+  line-height: 18px;
+}
+
+.bottomText span {
+  font-weight: bold;
+  color: var(--shade4);
+  cursor: pointer;
+}
+
+.error {
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  color: #ef3a3a;
+}
+
+.box button {
+  padding: 12px 24px;
+  width: 100%;
+  font-size: 16px;
+  line-height: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background-color: var(--shade3);
+  color: white;
+  border-radius: 5px;
+}
