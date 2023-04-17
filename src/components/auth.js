@@ -39,17 +39,20 @@ const Auth = () => {
     setErrorMsg("");
     setBtnDisable(true);
     // const res = await fetch("http://localhost:5000/user/signup", {
-    const res = await fetch("https://webmonitorbackend-production.up.railway.app/user/signup", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        name: inputVal?.name.trim(),
-        email: inputVal.email,
-        password: inputVal.pass,
-      }),
-    }).catch((err) => setErrorMsg("Error in creating user" - err.message));
+    const res = await fetch(
+      "https://webmonitorbackend-production.up.railway.app/user/signup",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          name: inputVal?.name.trim(),
+          email: inputVal.email,
+          password: inputVal.pass,
+        }),
+      }
+    ).catch((err) => setErrorMsg("Error in creating user" - err.message));
     setBtnDisable(false);
     if (!res) {
       setErrorMsg("Error in creating user");
@@ -86,16 +89,19 @@ const Auth = () => {
     setBtnDisable(true);
 
     // const res = await fetch("http://localhost:5000/user/login", {
-    const res = await fetch("https://webmonitorbackend-production.up.railway.app/user/login", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        email: inputVal.email,
-        password: inputVal.pass,
-      }),
-    }).catch((err) => setErrorMsg("Error in logging of user" - err.message));
+    const res = await fetch(
+      "https://webmonitorbackend-production.up.railway.app/user/login",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          email: inputVal.email,
+          password: inputVal.pass,
+        }),
+      }
+    ).catch((err) => setErrorMsg("Error in logging of user" - err.message));
     setBtnDisable(false);
 
     if (!res) {
@@ -128,6 +134,8 @@ const Auth = () => {
           type="text"
           className="input"
           placeholder="Enter name"
+          value={inputVal.name}
+          key="a"
           onChange={(e) =>
             setInputVal((prev) => ({ ...prev, name: e.target.value }))
           }
@@ -138,7 +146,9 @@ const Auth = () => {
         <input
           type="text"
           className="input"
+          key="b"
           placeholder="Enter e-mail"
+          value={inputVal.email}
           onChange={(e) =>
             setInputVal((prev) => ({ ...prev, email: e.target.value }))
           }
@@ -148,8 +158,10 @@ const Auth = () => {
         <label>Password</label>
         <input
           type="password"
+          key="c"
           className="input"
           placeholder="Enter Password"
+          value={inputVal.pass}
           onChange={(e) =>
             setInputVal((prev) => ({ ...prev, pass: e.target.value }))
           }
@@ -174,7 +186,9 @@ const Auth = () => {
         <input
           type="text"
           className="input"
+          key="d"
           placeholder="Enter e-mail"
+          value={inputVal.email}
           onChange={(e) =>
             setInputVal((prev) => ({ ...prev, email: e.target.value }))
           }
@@ -185,6 +199,8 @@ const Auth = () => {
         <input
           type="password"
           className="input"
+          key="e"
+          value={inputVal.pass}
           placeholder="Enter Password"
           onChange={(e) =>
             setInputVal((prev) => ({ ...prev, pass: e.target.value }))

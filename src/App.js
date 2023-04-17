@@ -35,7 +35,7 @@ function App() {
     setErrMsg("");
     setAddWeb(true);
     // const res = await fetch("http://localhost:5000/website", {
-    const res = await fetch("https://webmonitorbackend-production.up.railway.app/website", {
+      const res = await fetch("https://webmonitorbackend-production.up.railway.app/website", {
       method: "POST",
       headers: {
         Authorization: accessToken,
@@ -45,7 +45,9 @@ function App() {
         url: inputUrl,
       }),
     }).catch((err) => void err);
+    setInputUrl('');
     setAddWeb(false);
+    console.log(inputUrl)
     const result = await res.json();
     if (!result || !result.status) {
       setErrMsg(result.message);
@@ -164,6 +166,7 @@ function App() {
                   type="text"
                   placeholder="https://google.com"
                   className="web_input"
+                  value={inputUrl}
                   onChange={(e) => setInputUrl(e.target.value)}
                 />
               </div>
