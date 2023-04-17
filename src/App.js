@@ -34,7 +34,8 @@ function App() {
     }
     setErrMsg("");
     setAddWeb(true);
-    const res = await fetch("http://localhost:5000/website", {
+    // const res = await fetch("http://localhost:5000/website", {
+    const res = await fetch("https://webmonitorbackend-production.up.railway.app/website", {
       method: "POST",
       headers: {
         Authorization: accessToken,
@@ -59,7 +60,8 @@ function App() {
     const tokens = JSON.parse(rawToken);
     const accessToken = tokens.accessToken.token;
     setLoadingWebsites(true);
-    const res = await fetch("http://localhost:5000/website", {
+    // const res = await fetch("http://localhost:5000/website", {
+    const res = await fetch("https://webmonitorbackend-production.up.railway.app/website", {
       method: "GET",
       headers: {
         Authorization: accessToken,
@@ -80,7 +82,8 @@ function App() {
     const tokens = JSON.parse(rawToken);
     const accessToken = tokens.accessToken.token;
     setDelWeb(id);
-    const res = await fetch(`http://localhost:5000/website/${id}`, {
+    // const res = await fetch(`http://localhost:5000/website/${id}`, {
+    const res = await fetch(`https://webmonitorbackend-production.up.railway.app/website/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: accessToken,
@@ -106,7 +109,8 @@ function App() {
     const accessToken = tokens.accessToken;
     const aExpiry = new Date(accessToken.expireAt);
     if (new Date() > aExpiry) {
-      const res = await fetch("http://localhost:5000/user/new-token", {
+      // const res = await fetch("http://localhost:5000/user/new-token", {
+      const res = await fetch("https://webmonitorbackend-production.up.railway.app/user/new-token", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -176,7 +180,7 @@ function App() {
                 <p>LOADING...</p>
               ) : (
                 <div className="cards">
-                  {websiteData.length ? (
+                  {websiteData?.length ? (
                     websiteData.map((item) => (
                       <div className="card" key={item._id}>
                         <div className="left">

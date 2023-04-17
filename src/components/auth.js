@@ -38,7 +38,8 @@ const Auth = () => {
     }
     setErrorMsg("");
     setBtnDisable(true);
-    const res = await fetch("http://localhost:5000/user/signup", {
+    // const res = await fetch("http://localhost:5000/user/signup", {
+    const res = await fetch("https://webmonitorbackend-production.up.railway.app/user/signup", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -84,7 +85,8 @@ const Auth = () => {
     setErrorMsg("");
     setBtnDisable(true);
 
-    const res = await fetch("http://localhost:5000/user/login", {
+    // const res = await fetch("http://localhost:5000/user/login", {
+    const res = await fetch("https://webmonitorbackend-production.up.railway.app/user/login", {
       method: "POST",
       headers: {
         "content-type": "application/json",
