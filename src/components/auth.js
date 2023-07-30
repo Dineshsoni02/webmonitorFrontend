@@ -40,7 +40,7 @@ const Auth = () => {
     setBtnDisable(true);
     // const res = await fetch("http://localhost:5000/user/signup", {
     const res = await fetch(
-      "https://webmonitorbackend-production.up.railway.app/user/signup",
+      "https://webmonitor-backend.onrender.com/user/signup",
       {
         method: "POST",
         headers: {
@@ -90,7 +90,7 @@ const Auth = () => {
 
     // const res = await fetch("http://localhost:5000/user/login", {
     const res = await fetch(
-      "https://webmonitorbackend-production.up.railway.app/user/login",
+      "https://webmonitor-backend.onrender.com/user/login",
       {
         method: "POST",
         headers: {

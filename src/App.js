@@ -35,7 +35,7 @@ function App() {
     setErrMsg("");
     setAddWeb(true);
     // const res = await fetch("http://localhost:5000/website", {
-      const res = await fetch("https://webmonitorbackend-production.up.railway.app/website", {
+      const res = await fetch("https://webmonitor-backend.onrender.com/website", {
       method: "POST",
       headers: {
         Authorization: accessToken,
@@ -63,7 +63,7 @@ function App() {
     const accessToken = tokens.accessToken.token;
     setLoadingWebsites(true);
     // const res = await fetch("http://localhost:5000/website", {
-    const res = await fetch("https://webmonitorbackend-production.up.railway.app/website", {
+    const res = await fetch("https://webmonitor-backend.onrender.com/website", {
       method: "GET",
       headers: {
         Authorization: accessToken,
@@ -85,7 +85,7 @@ function App() {
     const accessToken = tokens.accessToken.token;
     setDelWeb(id);
     // const res = await fetch(`http://localhost:5000/website/${id}`, {
-    const res = await fetch(`https://webmonitorbackend-production.up.railway.app/website/${id}`, {
+    const res = await fetch(`https://webmonitor-backend.onrender.com/website/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: accessToken,
@@ -112,7 +112,7 @@ function App() {
     const aExpiry = new Date(accessToken.expireAt);
     if (new Date() > aExpiry) {
       // const res = await fetch("http://localhost:5000/user/new-token", {
-      const res = await fetch("https://webmonitorbackend-production.up.railway.app/user/new-token", {
+      const res = await fetch("https://webmonitor-backend.onrender.com/user/new-token", {
         method: "POST",
         headers: {
           "content-type": "application/json",
