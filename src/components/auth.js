@@ -65,6 +65,7 @@ const Auth = () => {
 
     const sTokens = result.data?.tokens;
     localStorage.setItem("Token", JSON.stringify(sTokens));
+    
     setTimeout(() => {
       window.location.reload();
     }, 500);
