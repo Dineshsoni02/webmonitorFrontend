@@ -38,7 +38,7 @@ const Auth = () => {
     }
     setErrorMsg("");
     setBtnDisable(true);
-    // const res = await fetch("http://localhost:5000/user/signup", {
+
     const res = await fetch(
       "https://webmonitor-backend.onrender.com/user/signup",
       {
@@ -89,7 +89,7 @@ const Auth = () => {
     setErrorMsg("");
     setBtnDisable(true);
 
-    // const res = await fetch("http://localhost:5000/user/login", {
+
     const res = await fetch(
       "https://webmonitor-backend.onrender.com/user/login",
       {
@@ -127,100 +127,116 @@ const Auth = () => {
   }, [isSignUpActive]);
 
   const signUpDiv = (
-    <div className="box sign-up">
-      <div className="heading">Sign up</div>
-      <div className="elem">
-        <label>Name</label>
-        <input
-          type="text"
-          className="input"
-          placeholder="Enter name"
-          value={inputVal.name}
-          key="a"
-          onChange={(e) =>
-            setInputVal((prev) => ({ ...prev, name: e.target.value }))
-          }
-        />
+    <div className="glass-panel auth-card">
+      <div className="auth-header">
+        <h2>Create Account</h2>
+        <p className="subtitle">Start monitoring your websites today</p>
       </div>
-      <div className="elem">
-        <label>E-mail</label>
-        <input
-          type="text"
-          className="input"
-          key="b"
-          placeholder="Enter e-mail"
-          value={inputVal.email}
-          onChange={(e) =>
-            setInputVal((prev) => ({ ...prev, email: e.target.value }))
-          }
-        />
-      </div>
-      <div className="elem">
-        <label>Password</label>
-        <input
-          type="password"
-          key="c"
-          className="input"
-          placeholder="Enter Password"
-          value={inputVal.pass}
-          onChange={(e) =>
-            setInputVal((prev) => ({ ...prev, pass: e.target.value }))
-          }
-        />
-      </div>
-      {errorMsg && <p className="error">{errorMsg}</p>}
-      <button onClick={handleSignUp} disabled={btnDisable}>
-        {btnDisable ? "Trying to SignUp..." : "Sign Up"}
-      </button>
-      <div className="bottomText">
-        Already a User ?{" "}
-        <span onClick={() => setIsSignUpActive(false)}>Login</span> here
+      
+      <div className="auth-form">
+        <div className="input-group">
+          <label>Name</label>
+          <input
+            type="text"
+            className="input-field"
+            placeholder="John Doe"
+            value={inputVal.name}
+            key="a"
+            onChange={(e) =>
+              setInputVal((prev) => ({ ...prev, name: e.target.value }))
+            }
+          />
+        </div>
+        <div className="input-group">
+          <label>E-mail</label>
+          <input
+            type="text"
+            className="input-field"
+            key="b"
+            placeholder="john@example.com"
+            value={inputVal.email}
+            onChange={(e) =>
+              setInputVal((prev) => ({ ...prev, email: e.target.value }))
+            }
+          />
+        </div>
+        <div className="input-group">
+          <label>Password</label>
+          <input
+            type="password"
+            key="c"
+            className="input-field"
+            placeholder="••••••••"
+            value={inputVal.pass}
+            onChange={(e) =>
+              setInputVal((prev) => ({ ...prev, pass: e.target.value }))
+            }
+          />
+        </div>
+        
+        {errorMsg && <p className="error-msg">{errorMsg}</p>}
+        
+        <button className="btn btn-primary full-width" onClick={handleSignUp} disabled={btnDisable}>
+          {btnDisable ? "Creating Account..." : "Sign Up"}
+        </button>
+        
+        <div className="auth-footer">
+          <p>Already have an account? <span className="link-text" onClick={() => setIsSignUpActive(false)}>Login</span></p>
+        </div>
       </div>
     </div>
   );
 
   const logInDiv = (
-    <div className="box log-in">
-      <div className="heading">Login</div>
-      <div className="elem">
-        <label>E-mail</label>
-        <input
-          type="text"
-          className="input"
-          key="d"
-          placeholder="Enter e-mail"
-          value={inputVal.email}
-          onChange={(e) =>
-            setInputVal((prev) => ({ ...prev, email: e.target.value }))
-          }
-        />
+    <div className="glass-panel auth-card">
+      <div className="auth-header">
+        <h2>Welcome Back</h2>
+        <p className="subtitle">Login to access your dashboard</p>
       </div>
-      <div className="elem">
-        <label>Password</label>
-        <input
-          type="password"
-          className="input"
-          key="e"
-          value={inputVal.pass}
-          placeholder="Enter Password"
-          onChange={(e) =>
-            setInputVal((prev) => ({ ...prev, pass: e.target.value }))
-          }
-        />
-      </div>
-      {errorMsg && <p className="error">{errorMsg}</p>}
 
-      <button onClick={handleLogIn} disabled={btnDisable}>
-        {btnDisable ? "Logging you..." : "Login"}
-      </button>
-      <div className="bottomText">
-        New here ? <span onClick={() => setIsSignUpActive(true)}>Sign Up</span>{" "}
-        here
+      <div className="auth-form">
+        <div className="input-group">
+          <label>E-mail</label>
+          <input
+            type="text"
+            className="input-field"
+            key="d"
+            placeholder="john@example.com"
+            value={inputVal.email}
+            onChange={(e) =>
+              setInputVal((prev) => ({ ...prev, email: e.target.value }))
+            }
+          />
+        </div>
+        <div className="input-group">
+          <label>Password</label>
+          <input
+            type="password"
+            className="input-field"
+            key="e"
+            value={inputVal.pass}
+            placeholder="••••••••"
+            onChange={(e) =>
+              setInputVal((prev) => ({ ...prev, pass: e.target.value }))
+            }
+          />
+        </div>
+        
+        {errorMsg && <p className="error-msg">{errorMsg}</p>}
+
+        <button className="btn btn-primary full-width" onClick={handleLogIn} disabled={btnDisable}>
+          {btnDisable ? "Logging in..." : "Login"}
+        </button>
+        
+        <div className="auth-footer">
+          <p>New here? <span className="link-text" onClick={() => setIsSignUpActive(true)}>Create Account</span></p>
+        </div>
       </div>
     </div>
   );
+
   return (
-    <div className="container">{isSignUpActive ? signUpDiv : logInDiv}</div>
+    <div className="auth-container">{isSignUpActive ? signUpDiv : logInDiv}</div>
   );
 };
 

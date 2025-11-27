@@ -22,7 +22,7 @@ function App() {
   }
 
   
-  //add websites to database
+
   const addWebsite = async () => {
     if (addWeb) return;
     const rawToken = localStorage.getItem("Token");
@@ -38,7 +38,7 @@ function App() {
     }
     setErrMsg("");
     setAddWeb(true);
-    // const res = await fetch("http://localhost:5000/website", {
+
       const res = await fetch("https://webmonitor-backend.onrender.com/website", {
       method: "POST",
       headers: {
@@ -59,14 +59,14 @@ function App() {
     toast.success(result.message);
     allWebsite();
   };
-  //fetch all websites from database
+
   const allWebsite = async () => {
     if (loadingWebsites) return;
     const rawToken = localStorage.getItem("Token");
     const tokens = JSON.parse(rawToken);
     const accessToken = tokens.accessToken.token;
     setLoadingWebsites(true);
-    // const res = await fetch("http://localhost:5000/website", {
+
     const res = await fetch("https://webmonitor-backend.onrender.com/website", {
       method: "GET",
       headers: {
@@ -80,7 +80,7 @@ function App() {
     }
     setWebsiteData(result?.data);
   };
-  //deletes websites from database
+
 
   const handleDelete = async (id) => {
     if (delWeb) return;
@@ -88,7 +88,7 @@ function App() {
     const tokens = JSON.parse(rawToken);
     const accessToken = tokens.accessToken.token;
     setDelWeb(id);
-    // const res = await fetch(`http://localhost:5000/website/${id}`, {
+
     const res = await fetch(`https://webmonitor-backend.onrender.com/website/${id}`, {
       method: "DELETE",
       headers: {
@@ -103,7 +103,7 @@ function App() {
     toast.success(result.message);
     allWebsite();
   };
-  //init function for user validation
+
   const init = async () => {
     const rawToken = localStorage.getItem("Token");
     if (!rawToken) {
@@ -115,7 +115,7 @@ function App() {
     const accessToken = tokens.accessToken;
     const aExpiry = new Date(accessToken.expireAt);
     if (new Date() > aExpiry) {
-      // const res = await fetch("http://localhost:5000/user/new-token", {
+
       const res = await fetch("https://webmonitor-backend.onrender.com/user/new-token", {
         method: "POST",
         headers: {
@@ -153,77 +153,103 @@ function App() {
     init();
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("Token");
+    window.location.reload();
+  };
+
   return (
     <div className="App">
-      <Toaster />
+      <div className="grid-background"></div>
+      <Toaster 
+        position="top-center"
+        toastOptions={{
+          style: {
+            background: '#1e293b',
+            color: '#fff',
+          },
+        }}
+      />
 
       {pageLoaded ? (
         showAuth ? (
           <Auth />
         ) : (
-          <div className="inner-app">
-            <div className="app-header">
-              <p className="heading">Add Website for monitoring</p>
-              <div className="elem">
-                <label>Enter website URL</label>
-                <input
-                  type="text"
-                  placeholder="https://google.com"
-                  className="web_input"
-                  value={inputUrl}
-                  onChange={(e) => setInputUrl(e.target.value)}
-                />
+          <div className="main-container">
+            <header className="glass-panel app-header">
+              <div className="logo-section">
+                <h1>WebWatch</h1>
+                <p className="subtitle">Monitor your websites in real-time</p>
               </div>
-              {errMsg && <p className="error">{errMsg}</p>}
-              <button onClick={addWebsite} disabled={addWeb}>
-                {addWeb ? "Adding..." : "Add"}
+              <button className="btn btn-outline" onClick={handleLogout} style={{color: 'var(--text-muted)', border: '1px solid var(--border)'}}>
+                Logout
               </button>
-            </div>
+            </header>
 
-            <div className="body">
-              <p className="heading">Your Websites</p>
-
-              {loadingWebsites ? (
-                <p>LOADING...</p>
-              ) : (
-                <div className="cards">
-                  {websiteData?.length ? (
-                    websiteData.map((item) => (
-                      <div className="card" key={item._id}>
-                        <div className="left">
-                          <p
-                            className={`link ${
-                              item.isActive ? "green" : "red"
-                            }`}
-                          >
-                            {item.isActive ? "ACTIVE" : "DOWN"}
-                          </p>
-                          <p className="url">{item.url}</p>
-                        </div>
-
-                        <div className="right">
-                          <p
-                            className="link red"
-                            onClick={() => handleDelete(item._id)}
-                          >
-                            {delWeb == item._id ? "Deleting..." : "Delete"}
-                          </p>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="avail">
-                      No websites are added. Add some websites...
-                    </p>
-                  )}
+            <div className="content-grid">
+              <div className="glass-panel add-section">
+                <h2>Add New Website</h2>
+                <div className="input-group">
+                  <input
+                    type="text"
+                    placeholder="https://example.com"
+                    className="input-field"
+                    value={inputUrl}
+                    onChange={(e) => setInputUrl(e.target.value)}
+                  />
+                  <button className="btn btn-primary" onClick={addWebsite} disabled={addWeb}>
+                    {addWeb ? "Adding..." : "Monitor Website"}
+                  </button>
                 </div>
-              )}
+                {errMsg && <p className="error-msg" style={{color: 'var(--danger)', marginTop: '10px'}}>{errMsg}</p>}
+              </div>
+
+              <div className="glass-panel list-section">
+                <div className="section-header">
+                  <h2>Monitored Websites</h2>
+                  <span className="badge">{websiteData?.length || 0} Active</span>
+                </div>
+
+                {loadingWebsites ? (
+                  <div className="loading-state">
+                    <p>Syncing data...</p>
+                  </div>
+                ) : (
+                  <div className="website-grid">
+                    {websiteData?.length ? (
+                      websiteData.map((item) => (
+                        <div className="website-card" key={item._id}>
+                          <div className="card-status">
+                            <span className={`status-dot ${item.isActive ? "active" : "inactive"}`}></span>
+                            <span className="status-text">{item.isActive ? "Operational" : "Down"}</span>
+                          </div>
+                          <p className="card-url" title={item.url}>{item.url}</p>
+                          <div className="card-actions">
+                            <button 
+                              className="btn-icon delete-btn"
+                              onClick={() => handleDelete(item._id)}
+                              disabled={delWeb === item._id}
+                            >
+                              {delWeb === item._id ? "..." : "Delete"}
+                            </button>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="empty-state">
+                        <p>No websites being monitored yet.</p>
+                        <p className="sub-text">Add your first website above to get started.</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )
       ) : (
-        <div className="loading">
-          <p>Loading...</p>
+        <div className="loading-container">
+          <p className="loading-text">WebWatch</p>
         </div>
       )}
     </div>
