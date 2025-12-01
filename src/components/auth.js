@@ -24,7 +24,7 @@ const Auth = () => {
   const handleSignUp = async () => {
     if (btnDisable) return;
 
-    if (!inputVal?.name.trim() || !inputVal?.email.trim() || !inputVal.pass) {
+    if (!inputVal?.name?.trim() || !inputVal?.email?.trim() || !inputVal?.pass) {
       setErrorMsg("All fields are required");
       return;
     }
@@ -74,11 +74,11 @@ const Auth = () => {
   const handleLogIn = async () => {
     if (btnDisable) return;
 
-    if (!inputVal?.email.trim() || !inputVal.pass) {
+    if (!inputVal?.email?.trim() || !inputVal.pass) {
       setErrorMsg("All fields are required");
       return;
     }
-    if (!validateEmail(inputVal.email)) {
+    if (!validateEmail(inputVal?.email)) {
       setErrorMsg("Enter valid email");
       return;
     }
@@ -98,7 +98,7 @@ const Auth = () => {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          email: inputVal.email,
+          email: inputVal?.email,
           password: inputVal.pass,
         }),
       }
