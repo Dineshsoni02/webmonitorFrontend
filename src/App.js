@@ -3,6 +3,7 @@ import "./App.css";
 
 import { Toaster, toast } from "react-hot-toast";
 import Auth from "./components/auth";
+import { RefreshCw, Copy, Trash2, Globe, Loader } from "lucide-react";
 
 function App() {
   const [pageLoaded, setPageLoaded] = useState(false);
@@ -13,6 +14,7 @@ function App() {
   const [websiteData, setWebsiteData] = useState([]);
   const [delWeb, setDelWeb] = useState("");
   const [addWeb, setAddWeb] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
 
   function validateUrl(value) {
@@ -60,12 +62,17 @@ function App() {
     allWebsite();
   };
 
-  const allWebsite = async () => {
-    if (loadingWebsites) return;
+  const allWebsite = async (isRefresh = false) => {
+    if (loadingWebsites && !isRefresh) return;
     const rawToken = localStorage.getItem("Token");
     const tokens = JSON.parse(rawToken);
     const accessToken = tokens.accessToken.token;
-    setLoadingWebsites(true);
+    
+    if (isRefresh) {
+      setRefreshing(true);
+    } else {
+      setLoadingWebsites(true);
+    }
 
     const res = await fetch("https://webmonitor-backend.onrender.com/website", {
       method: "GET",
@@ -73,12 +80,19 @@ function App() {
         Authorization: accessToken,
       },
     }).catch((err) => void err);
+    
     setLoadingWebsites(false);
+    setRefreshing(false);
+    
     const result = await res.json();
     if (!result || !result.status) {
       setErrMsg(result.message);
     }
     setWebsiteData(result?.data);
+    
+    if (isRefresh) {
+      toast.success("Websites refreshed!");
+    }
   };
 
 
@@ -149,6 +163,15 @@ function App() {
     allWebsite();
   };
 
+  const handleRefresh = () => {
+    allWebsite(true);
+  };
+
+  const copyToClipboard = (url) => {
+    navigator.clipboard.writeText(url);
+    toast.success("URL copied to clipboard!");
+  };
+
   useEffect(() => {
     init();
   }, []);
@@ -157,6 +180,16 @@ function App() {
     localStorage.removeItem("Token");
     window.location.reload();
   };
+
+  const getFaviconUrl = (url) => {
+    try {
+      const domain = new URL(url).hostname;
+      return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+    } catch (e) {
+      return null;
+    }
+  };
+
 
   return (
     <div className="App">
@@ -207,38 +240,94 @@ function App() {
               <div className="glass-panel list-section">
                 <div className="section-header">
                   <h2>Monitored Websites</h2>
-                  <span className="badge">{websiteData?.length || 0} Active</span>
+                  <div style={{display: 'flex', gap: '12px', alignItems: 'center'}}>
+                    <span className="badge">{websiteData?.length || 0} Active</span>
+                    <button 
+                      className="btn btn-outline" 
+                      onClick={handleRefresh}
+                      disabled={refreshing}
+                      style={{
+                        padding: '8px 16px',
+                        fontSize: '0.85rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                    >
+                      <RefreshCw 
+                        size={16} 
+                        style={{
+                          animation: refreshing ? 'rotate 1s linear infinite' : 'none'
+                        }}
+                      />
+                      {refreshing ? 'Refreshing...' : 'Refresh'}
+                    </button>
+                  </div>
                 </div>
 
                 {loadingWebsites ? (
-                  <div className="loading-state">
-                    <p>Syncing data...</p>
+                  <div className="website-grid">
+                    {[1, 2, 3].map((i) => (
+                      <div className="skeleton-card" key={i}>
+                        <div style={{display: 'flex', gap: '8px', marginBottom: '12px'}}>
+                          <div className="skeleton-circle" style={{width: '8px', height: '8px'}}></div>
+                          <div className="skeleton-line short"></div>
+                        </div>
+                        <div className="skeleton-line medium" style={{height: '16px', marginBottom: '12px'}}></div>
+                        <div className="skeleton-line short" style={{height: '8px'}}></div>
+                      </div>
+                    ))}
                   </div>
                 ) : (
                   <div className="website-grid">
                     {websiteData?.length ? (
                       websiteData.map((item) => (
                         <div className="website-card" key={item._id}>
-                          <div className="card-status">
-                            <span className={`status-dot ${item.isActive ? "active" : "inactive"}`}></span>
-                            <span className="status-text">{item.isActive ? "Operational" : "Down"}</span>
+                          <div className="card-header-row">
+                            <div className="favicon-container">
+                              {getFaviconUrl(item.url) ? (
+                                <img 
+                                  src={getFaviconUrl(item.url)} 
+                                  alt="favicon"
+                                  className="website-favicon"
+                                  onError={(e) => {
+                                    e.target.style.display = 'none';
+                                    e.target.nextSibling.style.display = 'block';
+                                  }}
+                                />
+                              ) : null}
+                              <Globe size={20} className="favicon-fallback" style={{display: 'none', color: 'var(--text-muted)'}} />
+                            </div>
+                            <div className="card-status">
+                              <span className={`status-dot ${item.isActive ? "active" : "inactive"}`}></span>
+                              <span className="status-text">{item.isActive ? "Operational" : "Down"}</span>
+                            </div>
                           </div>
                           <p className="card-url" title={item.url}>{item.url}</p>
-                          <div className="card-actions">
+                          <div className="card-actions" style={{display: 'flex', gap: '8px', justifyContent: 'flex-end'}}>
+                            <button 
+                              className="btn-icon copy-btn"
+                              onClick={() => copyToClipboard(item.url)}
+                              title="Copy URL"
+                            >
+                              <Copy size={16} />
+                            </button>
                             <button 
                               className="btn-icon delete-btn"
                               onClick={() => handleDelete(item._id)}
                               disabled={delWeb === item._id}
+                              title="Delete website"
                             >
-                              {delWeb === item._id ? "..." : "Delete"}
+                              {delWeb === item._id ? <Loader size={16} className="spinning" /> : <Trash2 size={16} />}
                             </button>
                           </div>
                         </div>
                       ))
                     ) : (
                       <div className="empty-state">
-                        <p>No websites being monitored yet.</p>
-                        <p className="sub-text">Add your first website above to get started.</p>
+                        <Globe size={64} style={{marginBottom: '16px', color: 'var(--text-muted)', opacity: 0.5}} />
+                        <p style={{fontSize: '1.1rem', fontWeight: '500', color: 'var(--text-main)', marginBottom: '8px'}}>No websites being monitored yet</p>
+                        <p className="sub-text">Add your first website above to get started monitoring uptime.</p>
                       </div>
                     )}
                   </div>

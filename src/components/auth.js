@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "./auth.css";
 import toast from "react-hot-toast";
+import { Eye, EyeOff } from "lucide-react";
 
 const Auth = () => {
   const [isSignUpActive, setIsSignUpActive] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [btnDisable, setBtnDisable] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [slideDirection, setSlideDirection] = useState("");
 
   const [inputVal, setInputVal] = useState({
     name: "",
@@ -19,6 +23,36 @@ const Auth = () => {
       .match(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       );
+  };
+
+  const calculatePasswordStrength = (password) => {
+    let strength = 0;
+    if (password.length >= 6) strength++;
+    if (password.length >= 10) strength++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+    if (/\d/.test(password)) strength++;
+    if (/[^a-zA-Z0-9]/.test(password)) strength++;
+    return Math.min(strength, 4);
+  };
+
+  const handlePasswordChange = (value) => {
+    setInputVal((prev) => ({ ...prev, pass: value }));
+    if (isSignUpActive) {
+      setPasswordStrength(calculatePasswordStrength(value));
+    }
+  };
+
+  const getStrengthText = () => {
+    if (passwordStrength === 0) return "";
+    if (passwordStrength <= 2) return "Weak password";
+    if (passwordStrength === 3) return "Medium password";
+    return "Strong password";
+  };
+
+  const getStrengthClass = () => {
+    if (passwordStrength <= 2) return "weak";
+    if (passwordStrength === 3) return "medium";
+    return "strong";
   };
 
   const handleSignUp = async () => {
@@ -124,10 +158,18 @@ const Auth = () => {
 
   useEffect(() => {
     setInputVal({});
+    setPasswordStrength(0);
+    setShowPassword(false);
   }, [isSignUpActive]);
 
+  const toggleAuthMode = (isSignUp) => {
+    setSlideDirection(isSignUp ? "slide-in-right" : "slide-in-left");
+    setIsSignUpActive(isSignUp);
+    setTimeout(() => setSlideDirection(""), 300);
+  };
+
   const signUpDiv = (
-    <div className="glass-panel auth-card">
+    <div className={`glass-panel auth-card ${slideDirection}`}>
       <div className="auth-header">
         <h2>Create Account</h2>
         <p className="subtitle">Start monitoring your websites today</p>
@@ -162,33 +204,59 @@ const Auth = () => {
         </div>
         <div className="input-group">
           <label>Password</label>
-          <input
-            type="password"
-            key="c"
-            className="input-field"
-            placeholder="••••••••"
-            value={inputVal.pass}
-            onChange={(e) =>
-              setInputVal((prev) => ({ ...prev, pass: e.target.value }))
-            }
-          />
+          <div className="input-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              key="c"
+              className="input-field"
+              placeholder="••••••••"
+              value={inputVal.pass}
+              onChange={(e) => handlePasswordChange(e.target.value)}
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              tabIndex="-1"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+          {inputVal.pass && (
+            <>
+              <div className="password-strength">
+                {[1, 2, 3, 4].map((bar) => (
+                  <div
+                    key={bar}
+                    className={`strength-bar ${
+                      bar <= passwordStrength ? `active ${getStrengthClass()}` : ""
+                    }`}
+                  />
+                ))}
+              </div>
+              {passwordStrength > 0 && (
+                <p className="strength-text">{getStrengthText()}</p>
+              )}
+            </>
+          )}
         </div>
         
-        {errorMsg && <p className="error-msg">{errorMsg}</p>}
+        {errorMsg && <p className="error-msg shake-error">{errorMsg}</p>}
         
         <button className="btn btn-primary full-width" onClick={handleSignUp} disabled={btnDisable}>
+          {btnDisable && <span className="btn-spinner"></span>}
           {btnDisable ? "Creating Account..." : "Sign Up"}
         </button>
         
         <div className="auth-footer">
-          <p>Already have an account? <span className="link-text" onClick={() => setIsSignUpActive(false)}>Login</span></p>
+          <p>Already have an account? <span className="link-text" onClick={() => toggleAuthMode(false)}>Login</span></p>
         </div>
       </div>
     </div>
   );
 
   const logInDiv = (
-    <div className="glass-panel auth-card">
+    <div className={`glass-panel auth-card ${slideDirection}`}>
       <div className="auth-header">
         <h2>Welcome Back</h2>
         <p className="subtitle">Login to access your dashboard</p>
@@ -210,26 +278,35 @@ const Auth = () => {
         </div>
         <div className="input-group">
           <label>Password</label>
-          <input
-            type="password"
-            className="input-field"
-            key="e"
-            value={inputVal.pass}
-            placeholder="••••••••"
-            onChange={(e) =>
-              setInputVal((prev) => ({ ...prev, pass: e.target.value }))
-            }
-          />
+          <div className="input-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="input-field"
+              key="e"
+              value={inputVal.pass}
+              placeholder="••••••••"
+              onChange={(e) => handlePasswordChange(e.target.value)}
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+              tabIndex="-1"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
         </div>
         
-        {errorMsg && <p className="error-msg">{errorMsg}</p>}
+        {errorMsg && <p className="error-msg shake-error">{errorMsg}</p>}
 
         <button className="btn btn-primary full-width" onClick={handleLogIn} disabled={btnDisable}>
+          {btnDisable && <span className="btn-spinner"></span>}
           {btnDisable ? "Logging in..." : "Login"}
         </button>
         
         <div className="auth-footer">
-          <p>New here? <span className="link-text" onClick={() => setIsSignUpActive(true)}>Create Account</span></p>
+          <p>New here? <span className="link-text" onClick={() => toggleAuthMode(true)}>Create Account</span></p>
         </div>
       </div>
     </div>
